@@ -1,7 +1,7 @@
-# need realize bd, scores, records, requests scores, register
+# need realize bd with  scores, records, requests scores
 from game import *
 from settings import *
-
+import sys
 
 class Preview:
 

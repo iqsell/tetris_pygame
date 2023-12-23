@@ -30,7 +30,7 @@ class Game:
         self.tetromino = Tetromino(
             choice(list(TETROMINOS.keys())),
             self.sprites,
-            self.create_new_tetromino,
+            self.create_new_tetris,
             self.field_data)
 
         # timer
@@ -65,56 +65,66 @@ class Game:
 
     def clear_field(self):
         self.sprites.empty()
-
+# --------------game over screen----------------
     def show_game_over_screen(self):
         img_path = os.path.join('data', 'gameover.jpg')
         gameover_img = pygame.image.load(img_path)
         gameover_img = pygame.transform.scale(gameover_img, (800, 600))
         self.display_surface.blit(gameover_img, (-100, 0))
         pygame.display.flip()
-        pygame.time.delay(2000)
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    running = False
         self.restart_game()
-
+#------------restart game--------------
     def restart_game(self):
-
         self.surface = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
         self.rect = self.surface.get_rect(topleft=(PADDING, PADDING))
         self.sprites = pygame.sprite.Group()
         self.field_data = [[0 for x in range(COLUMNS)] for y in range(ROWS)]
+
+        # Убедитесь, что вы создаете новый тетромино с помощью метода create_new_tetromino
         self.tetromino = Tetromino(
             choice(list(TETROMINOS.keys())),
             self.sprites,
-            self.create_new_tetromino,
+            self.create_new_tetris,
             self.field_data)
-        self.down_speed = UPDATE_START_SPEED
-        self.down_speed_faster = self.down_speed * 0.3
-        self.down_pressed = False
+
+        # Очистка всех таймеров перед созданием новых
         self.timers = {
             'vertical move': Timer(self.down_speed, True, self.move_down),
             'horizontal move': Timer(MOVE_WAIT_TIME),
             'rotate': Timer(ROTATE_WAIT_TIME)
         }
         self.timers['vertical move'].activate()
+
+        self.down_speed = UPDATE_START_SPEED
+        self.down_speed_faster = self.down_speed * 0.3
+        self.down_pressed = False
         self.current_level = 1
         self.current_score = 0
         self.current_lines = 0
-
+#-----------------------check game over and create new -------------
     def check_game_over(self):
         for block in self.tetromino.blocks:
             if block.pos.y < 0:
                 self.clear_field()
                 self.show_game_over_screen()
                 return True
-            else:
-                return False
+        return False
 
-    def create_new_tetromino(self):
-        self.check_game_over()
+    def create_new_tetris(self):
+        if self.check_game_over():
+            return
         self.check_finished_rows()
         self.tetromino = Tetromino(
             self.get_next_shape(),
             self.sprites,
-            self.create_new_tetromino,
+            self.create_new_tetris,
             self.field_data)
 
     def timer_update(self):

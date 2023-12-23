@@ -1,5 +1,5 @@
 from settings import *
-
+from Register import log
 
 class Score:
     def __init__(self):
