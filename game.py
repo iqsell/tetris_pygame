@@ -50,6 +50,8 @@ class Game:
         self.current_lines = 0
 
         # sound
+        self.landing_sound = pygame.mixer.Sound('/home/localhostj/PycharmProjects/tetris/music/music.mp3')
+        self.landing_sound.set_volume(0.1)
 
     def calculate_score(self, num_lines):
         self.current_lines += num_lines
@@ -118,6 +120,7 @@ class Game:
         return False
 
     def create_new_tetris(self):
+        self.landing_sound.play()
         if self.check_game_over():
             return
         self.check_finished_rows()

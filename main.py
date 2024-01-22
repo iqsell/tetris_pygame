@@ -205,6 +205,7 @@ class Main:
         self.score = Score()
         self.preview = Preview()
 
+
     def update_score(self, lines, score, level):
         self.score.lines = lines
         self.score.score = score

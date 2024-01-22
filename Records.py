@@ -1,6 +1,5 @@
 from settings import *
 from game import *
-from Register import LoginWindow
 from score import Score
 class Records:
     def __init__(self):
@@ -10,7 +9,6 @@ class Records:
         self.rect = self.surface.get_rect(topright=(WINDOW_WIDTH - PADDING, PADDING))
         self.best_results = {}
         self.game = Game.check_game_over()
-        self.login = LoginWindow()
         self.score = Score()
 
     def update_best_results(self, player_name, score):
